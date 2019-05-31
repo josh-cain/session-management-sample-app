@@ -8730,14 +8730,15 @@
 	 * @param {sessionStateChangedCallback} cb
 	*/
 	WebAuth.prototype.startSessionManagement = function() {
-		// stand up OP iFrame
+		// TODO should have checks on authenticated user
+		// TODO url should be constructed from known iframe endpoint @ auth0-server
 		var opIframe = new OpIframeHandler({
 			url: 'http://localhost:3000/mock-op-iframe.html'
 		});
 		opIframe.init(function () {
-			// stand up RP iFrame
+			// TODO somethimes this starts before listener for OP is up... revamp
 			var rpIframe = new RpIframeHandler({
-				url: 'http://localhost:3000/rp-iframe.html'
+				url: '/rp-iframe.html'
 			});
 			rpIframe.init(function () {
 				console.log('iframe init complete');
