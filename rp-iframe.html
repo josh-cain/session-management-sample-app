@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>RP iFrame</title>
+    </head>
+
+    <body>
+        <h1>RP iFrame</h1>
+    </body>
+
+    <script>
+    // TODO implement state
+    var state = 'static-state';
+
+    function check_session() {
+        console.log('Checking session state...')
+        var targetOrigin = "http://localhost:3000";
+        var win = window.parent.document.getElementById("opIframe").contentWindow;
+        win.postMessage(state, targetOrigin);
+    }
+
+    function setTimer() {
+        console.log('setting up timer...');
+        check_session();
+        // TODO customizeable interval
+        timerID = setInterval("check_session()", 30 * 1000);
+    }
+
+    function receiveMessage(event) {
+        // todo origin check
+        console.log('RP received session state of: ' + event.data);
+    }
+
+    window.addEventListener("message", receiveMessage, false);
+    setTimer();
+    </script>
+
+</html>

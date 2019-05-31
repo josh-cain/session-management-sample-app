@@ -36,6 +36,8 @@ window.addEventListener('load', function() {
   var accessTokenMessage = document.getElementById('access-token-message');
   var tokenExpiryDate = document.getElementById('token-expiry-date');
 
+  var sessionManageBtn = document.getElementById('btn-session-manage');
+
   homeViewBtn.addEventListener('click', function() {
     homeView.style.display = 'inline-block';
     profileView.style.display = 'none';
@@ -56,6 +58,14 @@ window.addEventListener('load', function() {
 
   checkSessionBtn.addEventListener('click', function() {
     renewTokens();
+  });
+
+  sessionManageBtn.addEventListener('click', function() {
+    webAuth.startSessionManagement({
+			url: 'http://localhost:3000/mock-op-iframe.html'
+    }, function(state) {
+      console.log('Session state is: ' + state)
+    });
   });
 
   function localLogin(authResult) {

@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>OP iFrame</title>
+    </head>
+
+    <body>
+        <h1>Mock OP iFrame</h1>
+        <p>Used strictly for OIDC session management.  Ideally this body will be empty, and it will be served from OP.</p>
+    </body>
+
+    <script>
+        window.addEventListener('message', respondWithUnchanged, false);
+        function respondWithUnchanged(event) {
+            // TODO origin + other checks
+            event.source.postMessage('unchanged', event.origin);
+        }
+    </script>
+</html>

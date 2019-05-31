@@ -6941,6 +6941,56 @@
 	  this.storage.removeItem(this.namespace + state);
 	};
 
+	function OpIframeHandler(options) {
+		this.url = options.url;
+	}
+
+	// TODO this can be spoofed... how should this be set?
+	const OP_IFRAME_ID = 'opIframe';
+	OpIframeHandler.prototype.init = function(cb) {
+	  var _this = this;
+		var _window = windowHandler.getWindow();
+
+		_this.iframe = _window.document.getElementById(OP_IFRAME_ID);
+		if (!_this.iframe) {
+			console.log('Loading OP iFrame for first time...')
+			this.iframe = _window.document.createElement('iframe');
+			this.iframe.style.display = 'none';
+			this.iframe.setAttribute('id', OP_IFRAME_ID)
+			// TODO enforce caller = parent origin for postMessages
+	    _window.document.body.appendChild(this.iframe);
+	    this.iframe.src = this.url;
+		} else {
+			console.log('OP iFrame already loaded')
+		}
+		cb();
+	}
+
+	function RpIframeHandler(options) {
+		this.url = options.url;
+	}
+
+	const RP_IFRAME_ID = 'rpIframe';
+	// TODO same as above ^ for now, but expecting them to diverge
+	RpIframeHandler.prototype.init = function(cb) {
+	  var _this = this;
+		var _window = windowHandler.getWindow();
+
+		_this.iframe = _window.document.getElementById(RP_IFRAME_ID);
+		if (!_this.iframe) {
+			console.log('Loading RP iFrame for first time...')
+			this.iframe = _window.document.createElement('iframe');
+			this.iframe.style.display = 'none';
+			this.iframe.setAttribute('id', RP_IFRAME_ID)
+			// TODO enforce caller = parent origin for postMessages
+	    _window.document.body.appendChild(this.iframe);
+	    this.iframe.src = this.url;
+		} else {
+			console.log('RP iFrame already loaded')
+		}
+		cb();
+	}
+
 	function IframeHandler(options) {
 	  this.url = options.url;
 	  this.callback = options.callback;
@@ -8670,6 +8720,28 @@
 	    _this.parseHash({ hash: hash }, cb);
 	  });
 	};
+
+	/**
+	 * Uses OIDC session management protocol to set up an iFrame pair to inform the page of changes in
+	 * auth state
+	 *
+	 * @method startSessionManagement
+	 * @param {Object} [options]
+	 * @param {sessionStateChangedCallback} cb
+	*/
+	WebAuth.prototype.startSessionManagement = function(options) {
+		// stand up OP iFrame
+		var opIframe = new OpIframeHandler(options);
+		opIframe.init(function () {
+			// stand up RP iFrame
+			var rpIframe = new RpIframeHandler({
+				url: 'http://localhost:3000/rp-iframe.html'
+			});
+			rpIframe.init(function () {
+				console.log('iframe init complete');
+			});
+		});
+	}
 
 	/**
 	 * Renews an existing session on Auth0's servers using `response_mode=web_message`
