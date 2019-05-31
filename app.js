@@ -61,11 +61,7 @@ window.addEventListener('load', function() {
   });
 
   sessionManageBtn.addEventListener('click', function() {
-    webAuth.startSessionManagement({
-			url: 'http://localhost:3000/mock-op-iframe.html'
-    }, function(state) {
-      console.log('Session state is: ' + state)
-    });
+    webAuth.startSessionManagement();
   });
 
   function localLogin(authResult) {
@@ -123,6 +119,7 @@ window.addEventListener('load', function() {
       logoutBtn.style.display = 'inline-block';
       profileViewBtn.style.display = 'inline-block';
       checkSessionBtn.style.display = 'inline-block';
+      sessionManageBtn.style.display = 'inline-block';
       accessTokenMessage.style.display = 'inline-block';
       loginStatus.innerHTML =
         'You are logged in! You can now view your profile area.';
@@ -134,6 +131,7 @@ window.addEventListener('load', function() {
       profileViewBtn.style.display = 'none';
       profileView.style.display = 'none';
       checkSessionBtn.style.display = 'none';
+      sessionManageBtn.style.display = 'none';
       accessTokenMessage.style.display = 'none';
       loginStatus.innerHTML =
         'You are not logged in! Please log in to continue.';

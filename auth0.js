@@ -8729,9 +8729,11 @@
 	 * @param {Object} [options]
 	 * @param {sessionStateChangedCallback} cb
 	*/
-	WebAuth.prototype.startSessionManagement = function(options) {
+	WebAuth.prototype.startSessionManagement = function() {
 		// stand up OP iFrame
-		var opIframe = new OpIframeHandler(options);
+		var opIframe = new OpIframeHandler({
+			url: 'http://localhost:3000/mock-op-iframe.html'
+		});
 		opIframe.init(function () {
 			// stand up RP iFrame
 			var rpIframe = new RpIframeHandler({
